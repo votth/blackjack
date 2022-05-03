@@ -1,0 +1,12 @@
+----------------------------------------
+-----         Record table         -----
+----------------------------------------
+
+Explication: O means win, X means lost, - means tied
+
+
+Round		John		Kim		Leo		Kati
+
+  1		X		X		-		X
+  2		X		-		O		O
+  3		X		X		X		X
