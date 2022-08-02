@@ -1,19 +1,24 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <cstdlib>
 #include <ctime>
+#include <limits>
 
 #include "blackjack.h"
 
 // card-value pairs
 char card[13][10] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 int value[13]     = { 2,   3,   4,   5,   6,   7,   8,   9,   10,   10,     10,      10,     11};
-/* for an infinite decks of card, count[i] = 4 then no more of that card
-int count[13]  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-*/
+
+/**
+ * for an infinite decks of card, count[i] = 4 then no more of that card
+ * int count[13]  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+ */
+
 // Players
-char name[5][10] = {"John","Kim","Leo","Kati","DEALER"};
+char name[5][10] = {"John", "Kim", "Leo", "Kati", "DEALER"};
+
 // ???
 int i, r, tmp, round_count;
 char pick;
@@ -21,22 +26,22 @@ int tmp_point = 0;
 
 void Blackjack::recordCreate() {
 	FILE *fp;
-	fp = fopen("record.txt","w");
-	fprintf(fp,"----------------------------------------\n");
-	fprintf(fp,"-----         Record table         -----\n");
-	fprintf(fp,"----------------------------------------\n");
-	fprintf(fp,"\nExplication: O means win, X means lost, - means tied\n\n");
-	fprintf(fp,"\nRound\t\tJohn\t\tKim\t\tLeo\t\tKati\n\n");
+	fp = fopen("record.txt", "w");
+	fprintf(fp, "----------------------------------------\n");
+	fprintf(fp, "-----         Record table         -----\n");
+	fprintf(fp, "----------------------------------------\n");
+	fprintf(fp, "\nExplication: O means win, X means lost, - means tied\n\n");
+	fprintf(fp, "\nRound\t\tJohn\t\tKim\t\tLeo\t\tKati\n\n");
 	fclose(fp);
-} ;
+};
 
 void Blackjack::menu() {
-	FILE *f; //run through the record file by counting lines
+	FILE *f;	//run through the record file by counting lines
 	char line[256];
-	f = fopen("record.txt","r");
+	f = fopen("record.txt", "r");
 	if (f == NULL) recordCreate();
 	else
-		while (fgets(line,sizeof(line),f)) round_count++;
+		while (fgets(line, sizeof(line), f)) round_count++;
 	fclose(f);
 	round_count -= 9; //Check if there're already a play record
 	if (round_count < 0) round_count = 0;
@@ -45,25 +50,32 @@ void Blackjack::menu() {
 	dealer = NULL;
 	add = NULL;
 	while (pick != '4') {
-		printf("----------------------------------------\n");
-		printf("-----   Blackjack  Simulator  1.2  -----\n");
-		printf("----------------------------------------\n");
-		printf("Please choose from the below functions:\n");
-		//if 1st start out or have reset (chosen New) then don't print out option 0
+		std::cout << "----------------------------------------\n";
+		std::cout << "-----   Blackjack  Simulator  1.2  -----\n";
+		std::cout << "----------------------------------------\n";
+		std::cout << "Please choose from the below functions:\n";
+		//if 1st start out or have reset (chosen New) then don't print out option [0]
 		if (round_count!= 0)
-			printf("	[0]	Continue\n	[1]	New\n	[2]	Record\n	[3]	Rules\n	[4]	Exit\n");
+			std::cout << "\t[0]\tContinue\n\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
 		else
-			printf("	[1]	New\n	[2]	Record\n	[3]	Rules\n	[4]	Exit\n");
-		scanf("%c",&pick);	fflush(stdin);
+			std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
+		std::cin >> pick;
 		switch (pick) {
 			case '0': {
 				if( round_count==0 ){
-					printf("Error! Please try again!\n");
-					system("pause");
-					system("cls");
+					std::cout << "Error! Please try again!\n";
+					/*
+					 * If your window runs but the consoles flashes and closes immediately
+					 * https://www.learncpp.com/cpp-tutorial/compiling-your-first-program/
+					 */
+					std::cin.clear();
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					std::cin.get();
+					//
+					system("clear");
 					break;
 				}
-				system("cls");
+				system("clear");
 				b.round();
 				break;
 			}
@@ -72,32 +84,32 @@ void Blackjack::menu() {
 				recordCreate();
 				round_count = 0;
 //				for(tmp=0;tmp<13;tmp++)	count[tmp]=0;	reset the count of cards also, but if it infinite deck then no need for this
-				system("cls");
+				system("clear");
 				b.round();
-				system("cls");
+				system("clear");
 				break;
 			}
 			case '2': {
-				system("cls");
+				system("clear");
 				b.leadingBoard();
-				system("cls");
+				system("clear");
 				break;
 			}
 			case '3': {
-				system("cls");
+				system("clear");
 				b.Rule();
-				system("cls");
+				system("clear");
 				break;
 			}
 			case '4': {
-				printf("Thank you for playing!\tGoodbye!!!\n");
-				system("pause");
+				std::cout << "Thank you for playing!\tGoodbye!!!\n";
+				getchar();
 				break;
 			}
 			default: {
-				printf("Error! Please try again!\n");
-				system("pause");
-				system("cls");
+				std::cout << "Error! Please try again!\n";
+				getchar();
+				system("clear");
 				break;
 			}
 		}
@@ -114,13 +126,13 @@ void Blackjack::dealCard(char *s) {
 		*/
 		break;
 	}
-	strcat(s,", "); //just so the output look nicer: King, 8, Ace
-	strcat(s,card[r]);
+	strcat(s, ", "); //just so the output look nicer: King, 8, Ace
+	strcat(s, card[r]);
 	tmp_point += value[r]; //this will become the player's new point
 }
 
 void Blackjack::roundStart() {
-	printf("----Round %2d----\n",round_count);
+	std::cout << "---- Round " << round_count << "----\n";
 	free(add);
 	first = NULL;
 	srand(time(0)); //for r's random value
@@ -129,11 +141,11 @@ void Blackjack::roundStart() {
 		add = (struct player*) malloc(sizeof(player));
 		//check if there's enough space
 		if (!add) {
-			printf("Memory error!\n");
-			system("pause");
+			std::cout << "Memory error!\n";
+			getchar();
 		}
-		strcpy(add->name,name[i]);
-		printf("Player %s\n",add->name);
+		strcpy(add->name, name[i]);
+		std::cout << "Player "<< add->name << "\n";
 		before = NULL;
 		actual = first;
 		while (actual) {
@@ -155,36 +167,36 @@ void Blackjack::roundStart() {
 			*/
 			break;
 		}
-		strcpy(add->hand,card[r]); //adding the card to player's hand
+		strcpy(add->hand, card[r]); //adding the card to player's hand
 		tmp_point += value[r];
 
 		dealCard(add->hand);
 		add->point = tmp_point; //I couldn't find a way to directly change the uj->point's value
 
-		if (!strcmp(add->name,"DEALER")) { //output for Dealer is different to others, need to hide the second card aka to be facedown
-			printf("Hand: ");
+		if (!strcmp(add->name, "DEALER")) { //output for Dealer is different to others, need to hide the second card aka to be facedown
+			std::cout << "Hand: ";
 			tmp = 0;
 			while (add->hand[tmp] != ',') {
-				printf("%c",add->hand[tmp]);
+				std::cout << add->hand[tmp];
 				tmp++;
 			}
-			printf(", (unknown)\nPoint: %d\n",add->point-value[r]);
+			std::cout << ", (unknown)\nPoint: " << add->point - value[r] << "\n";
 			dealer = add; //save back the dealer point for easier access later on
 		//output for all of the other players
 		} else {
 			if (add->point == 21) {
-				printf("--- Blackjack! ---\n");
+				std::cout << "--- Blackjack! ---\n";
 				add->winCount = 'O';
 			} else
 				if (add->point == 22) add->point = 11;
-			printf("Hand: %s\nPoint: %d\n",add->hand,add->point);
+			std::cout << "Hand: " << add->hand << "\nPoint: " << add->point << "\n";
 		}
 		add->next = actual;
-		printf("--------\n");
+		std::cout << "--------\n";
 		i++;
 	}
-	system("pause");
-	system("cls");
+	getchar();
+	system("clear");
 }
 
 void Blackjack::round() {
@@ -197,66 +209,65 @@ void Blackjack::round() {
 				actual = actual->next;
 				continue;
 			}
-			printf("----Round %2d----\n",round_count);
-			printf("----%s's turn----\n",actual->name);
-			printf("Hand: %s\nPoint: %d\n",actual->hand,actual->point);
+			std::cout << "---- Round " << round_count << "----\n";
+			std::cout << "---- " << actual->name <<"'s turn----\n";
+			std::cout << "Hand: " << actual->hand << "\nPoint: " << actual->point << "\n";
 			do {
-				printf("------------\n");
-				printf("What do you want to do? [1] Stand or [2] Hit?	");
-				scanf("%d",&tmp);	fflush(stdin);
+				std::cout << "------------\n";
+				std::cout << "What do you want to do?\n[1] Stand\n[2] Hit";
+				std::cin >> tmp;
 				tmp_point = actual->point;
 				while (tmp != 1 && tmp != 2) {
-					printf("Error!\n");
-					printf("[1] Stand or [2] Hit?	");
-					scanf("%d",&tmp);
-					fflush(stdin);
+					std::cout << "Error!\n";
+					std::cout << "[1] Stand\n[2] Hit";
+					std::cin >> tmp;
 				}
 				if (tmp==1) {
-					printf("Hand: %s\nPoint: %d\n",actual->hand,actual->point);
-					printf("------------\n");
+					std::cout << "Hand: " << actual->hand << "\nPoint: " << actual->point << "\n";
+					std::cout << "------------\n";
 				} else {
 					dealCard(actual->hand);
 					actual->point = tmp_point;
 					if (actual->point > 21) {
-						printf("Busted!\n");
+						std::cout << "Busted!\n";
 						actual->winCount = 'X';
-						printf("Hand: %s\nPoint: %d	(x)\n",actual->hand,actual->point);
-						printf("------------\n");
+						std::cout << "Hand: " << actual->hand << "\nPoint: " << actual->point <<"	(x)\n";
+						std::cout << "------------\n";
 						break;
 					}
 					else
-						printf("Hand: %s\nPoint: %d\n",actual->hand,actual->point);
+						std::cout << "Hand: " << actual->hand << "\nPoint: " << actual->point <<"\n";
 				}
 			} while(tmp!=1);
-			system("pause");
+			getchar();
 			actual = actual->next;
-			system("cls");
+			system("clear");
 		}
 
 		Blackjack::result();
-		printf("\n\nDo you want to keep playing?	[1] Yes\t[2] No\n");
-		scanf("%c",&pick);	fflush(stdin);
-		system("cls");
+		std::cout << "\n\nDo you want to keep playing?\n[1] Yes\n[2] No\n";
+		std::cin >> pick;
+		system("clear");
 	} while(pick=='1');
 }
 
 void Blackjack::result() {
 	FILE *f;
-	f = fopen("record.txt","a");
-	fprintf(f,"%3d",round_count);
+	f = fopen("record.txt", "a");
+	fprintf(f, "%3d", round_count);
 
 	tmp_point = dealer->point;
 	while (dealer->point < 17) {
 		dealCard(dealer->hand);
 		dealer->point = tmp_point;
 	}
-	printf("%s:\nHand: %s\nPoint: %d\n\n\n",dealer->name,dealer->hand,dealer->point);
+	std::cout << dealer->name << ":\nHand: " << dealer->hand << "\nPoint: " << dealer->point << "\n\n\n";
 	actual = first;
 	if (dealer->point>21) {
 		while (actual->next) {
 			if (actual->winCount != 'X')
 				actual->winCount = 'O';
-			fprintf(f,"\t\t%c",actual->winCount);
+			fprintf(f, "\t\t%c", actual->winCount);
 			actual = actual->next;
 		}
 	} else {
@@ -270,28 +281,32 @@ void Blackjack::result() {
 					else
 						actual->winCount = '-';
 				}
-			fprintf(f,"\t\t%c",actual->winCount);
+			fprintf(f, "\t\t%c", actual->winCount);
 			actual = actual->next;
 		}
 	}
-	fprintf(f,"\n");
+	fprintf(f, "\n");
 	fclose(f);
 
 	actual = first;
-	printf("------------\n");
-	printf("The following people won:\n\n");
+	std::cout << "------------\n";
+	std::cout << "The following people won:\n\n";
 	while (actual->next) {
 		if(actual->winCount == 'O')
-			printf("%s\nHand: %s\nPoint: %d\n",actual->name,actual->hand,actual->point);
+			std::cout << actual->name
+					  << "\nHand: " << actual->hand
+					  << "\nPoint: " << actual->point << "\n";
 		actual = actual->next;
 	}
 
 	actual = first;
-	printf("------------\n");
-	printf("The following people tied:\n\n");
+	std::cout << "------------\n";
+	std::cout << "The following people tied:\n\n";
 	while (actual->next) {
 		if (actual->winCount == '-')
-			printf("%s\nHand: %s\nPoint: %d\n",actual->name,actual->hand,actual->point);
+			std::cout << actual->name
+					  << "\nHand: " << actual->hand
+					  << "\nPoint: " << actual->point << "\n";
 		actual = actual->next;
 	}
 }
@@ -299,22 +314,22 @@ void Blackjack::result() {
 void Blackjack::leadingBoard() {
 	FILE *f;
 	char line[256];
-	f = fopen("record.txt","r");
-	while (fgets(line,sizeof(line),f))
-		printf("%s",line);
-	printf("\n");
-	system("pause");
+	f = fopen("record.txt", "r");
+	while (fgets(line, sizeof(line), f))
+		std::cout << line;
+	std::cout << "\n";
+	getchar();
 }
 
 void Blackjack::Rule() {
 	FILE *f;
 	char s;
-	f = fopen("rule.txt","r");
+	f = fopen("rule.txt", "r");
 	if (f) {
 		while( (s = getc(f)) != EOF )
 			putchar(s);
 		fclose(f);
 	} else
-		printf("Error opening Rules!\n");
-	system("pause");
+		std::cout << "Error opening Rules!\n";
+	getchar();
 }
