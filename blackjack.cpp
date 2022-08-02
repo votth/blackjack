@@ -1,3 +1,4 @@
+// Headers
 #include <iostream>
 #include <stdlib.h>
 #include <cstdlib>
@@ -12,6 +13,7 @@
 // Headers
 #include "blackjack.h"
 
+// Global variables
 // card-value pairs
 const char card[13][10] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 const int value[13]     = { 2,   3,   4,   5,   6,   7,   8,   9,   10,   10,     10,      10,     11};
@@ -27,6 +29,21 @@ int tmp_point = 0;
 // for menu option
 char pick;
 
+
+// Wait keypress then clear screen
+void waitKey() {
+	/*
+	 * If your window runs but the consoles flashes and closes immediately
+	 * https://www.learncpp.com/cpp-tutorial/compiling-your-first-program/
+	 */
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cin.get();
+	system("clear");
+}
+
+
+// Creat record.txt
 void Blackjack::RecordCreate() {
 	std::ofstream fp;
 	fp.open("record.txt");
@@ -38,8 +55,9 @@ void Blackjack::RecordCreate() {
 	fp.close();
 };
 
+// Menu
 void Blackjack::Menu() {
-	/*
+	/* Check record's log
 	FILE *f;	//run through the record file by counting lines
 	char line[256];
 	f = fopen("record.txt", "r");
@@ -57,7 +75,6 @@ void Blackjack::Menu() {
 		}
 	} else RecordCreate();
 	f.close();
-
 	// Check if there're already a play record
 	// why 9??
 	round_count -= 9;
@@ -81,14 +98,7 @@ void Blackjack::Menu() {
 			case '0': {
 				if (round_count == 0) {
 					std::cout << "Error! Please try again!\n";
-					/*
-					 * If your window runs but the consoles flashes and closes immediately
-					 * https://www.learncpp.com/cpp-tutorial/compiling-your-first-program/
-					 */
-					std::cin.clear();
-					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-					std::cin.get();
-					system("clear");
+					waitKey();
 					break;
 				}
 				system("clear");
@@ -111,23 +121,23 @@ void Blackjack::Menu() {
 			case '2': {
 				system("clear");
 				b.LeadingBoard();
-				system("clear");
+				waitKey();
 				break;
 			}
 			case '3': {
 				system("clear");
 				b.Rule();
-				system("clear");
+				waitKey();
 				break;
 			}
 			case '4': {
 				std::cout << "Thank you for playing!\tGoodbye!!!\n";
-				getchar();
+				// waitKey();
 				break;
 			}
 			default: {
 				std::cout << "Error! Please try again!\n";
-				getchar();
+				waitKey();
 				system("clear");
 				break;
 			}
@@ -135,22 +145,47 @@ void Blackjack::Menu() {
 	}
 }
 
-// *s is the "hand" string
-void Blackjack::DealCard(char *s) {
-	r = rand() % 13;
+// Open rule.txt to read
+void Blackjack::Rule() {
 	/*
-	while (1) {
-		r = rand() % 13;
-		// count[r]++;
-		// if(count[r] <= 4)
-		// these lines are needed if playing with finite number of decks
-		break;
-	}
+	FILE *f;
+	char s;
+	f = fopen("rule.txt", "r");
+	if (f) {
+		while( (s = getc(f)) != EOF )
+			putchar(s);
+		fclose(f);
+	} else
+		std::cout << "Error opening Rules!\n";
 	*/
-	std::strcat(s, ", ");		// just so the output look nicer: King, 8, Ace
-	std::strcat(s, card[r]);
-	tmp_point += value[r];	//this will become the player's new point
+	std::string line;
+	std::ifstream f;
+	f.open("./rule.txt");
+	if (f.is_open()) {
+		while (std::getline(f, line)) {
+			std::cout << line << "\n";
+		}
+	} else {
+		std::cout << "error opening Rules!\n";
+	}
+	f.close();
 }
+
+// Open record.txt to read
+void Blackjack::LeadingBoard() {
+	std::string line;
+	std::ifstream f;
+	f.open("./record.txt");
+	if (f.is_open()) {
+		while (std::getline(f, line)) {
+			std::cout << line << "\n";
+		}
+	} else {
+		std::cout << "error opening Record!\n";
+	}
+	f.close();
+}
+
 
 void Blackjack::RoundStart() {
 	std::cout << "---- Round " << round_count << "----\n";
@@ -165,7 +200,7 @@ void Blackjack::RoundStart() {
 		// check if there's enough space
 		if (!add) {
 			std::cout << "Memory error!\n";
-			getchar();
+			std::getchar();
 			return;
 		}
 		strcpy(add->name, name[i]);
@@ -225,7 +260,7 @@ void Blackjack::RoundStart() {
 		delete(add);
 		i++;
 	}
-	getchar();
+	std::getchar();
 	system("clear");
 }
 
@@ -276,7 +311,7 @@ void Blackjack::Round() {
 								  << "\nPoint: " << actual->point <<"\n";
 				}
 			} while(tmp!=1);
-			getchar();
+			std::getchar();
 			actual = actual->next;
 			system("clear");
 		}
@@ -288,6 +323,22 @@ void Blackjack::Round() {
 		std::cin >> pick;
 		system("clear");
 	} while(pick=='1');
+}
+
+void Blackjack::DealCard(char *s) { // *s is the "hand" string
+	r = rand() % 13;
+	/*
+	while (1) {
+		r = rand() % 13;
+		// count[r]++;
+		// if(count[r] <= 4)
+		// these lines are needed if playing with finite number of decks
+		break;
+	}
+	*/
+	std::strcat(s, ", ");		// just so the output look nicer: King, 8, Ace
+	std::strcat(s, card[r]);
+	tmp_point += value[r];	//this will become the player's new point
 }
 
 void Blackjack::Result() {
@@ -361,48 +412,3 @@ void Blackjack::Result() {
 	}
 }
 
-// Open record.txt to read
-void Blackjack::LeadingBoard() {
-	/*
-	FILE *f;
-	char line[256];
-	f = fopen("record.txt", "r");
-	while (fgets(line, sizeof(line), f))
-		std::cout << line;
-	*/
-	std::string line;
-	std::ifstream f;
-	f.open("record.txt");
-	while (std::getline(f, line)) std::cout << line;
-	f.close();
-	std::cout << "\n";
-	getchar();
-}
-
-// Open rule.txt to read
-void Blackjack::Rule() {
-	/*
-	FILE *f;
-	char s;
-	f = fopen("rule.txt", "r");
-	if (f) {
-		while( (s = getc(f)) != EOF )
-			putchar(s);
-		fclose(f);
-	} else
-		std::cout << "Error opening Rules!\n";
-	*/
-	std::string line;
-	std::ifstream f;
-
-	f.open("./rule.txt");
-	if (f.is_open()) {
-		while (std::getline(f, line)) {
-			std::cout << line;
-		}
-		f.close();
-	} else {
-		std::cout << "Error opening Rules!\n";
-	}
-	getchar();
-}
