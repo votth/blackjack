@@ -1,44 +1,66 @@
 ----------------------------------------
----- Blackjack Simulator's Guidline ----
+---  Blackjack Simulator's Guidline  ---
 ----------------------------------------
 
-!!!The simulator's rule is different compare to the IRL Blackjack, please read carefully!!!
+!!!The simulator's rule is different
+compare to the IRL Blackjack, please read carefully!!!
 
----- OBJECT OF THE GAME ----
-Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going over.
-In this game, there will be 4 players going up against a single auto-generated DEALER, the odd is in your flavour!
+----  OBJECT OF THE GAME  ----
+Each participant attempts to beat the dealer
+by getting a count as close to 21 as possible, without going over.
+In this game, there will be 4 players,
+going up against a single auto-generated DEALER.
+The odd is in your flavour!
 
----- CARD VALUES/SCORING ----
-Aces are 11 points, face-cards are 10 and any other cards are its pip value.
+----  CARD VALUES/SCORING  ----
+Aces are 11 points, face-cards are 10
+and any other cards are its pip value.
 
----- THE DEAL ----
-The dealer gives one card face up to each player in rotation clockwise, and then one card face up to himself.
-Another round of cards is then dealt face up to each player, but the dealer takes his second card face down.
-Thus, each player except the dealer receives two cards face up, and the dealer receives one card face up and one card face down.
+----  THE DEAL  ----
+The dealer gives 01 card face up to players in clockwise-rotation,
+and then one card face up to himself.
+Another round of cards is then dealt face up to each player,
+but the dealer takes his second card face down.
+Thus, each player except the dealer receives two cards face up,
+and the dealer receives one card face up and one card face down.
 
----- NATURALS ----
-If a player's first two cards are an ace and a "ten-card" (a picture card or 10), giving him a count of 21 in two cards.
+----  NATURALS  ----
+If a player's first two cards are an ace and a "ten-card"
+(a picture card or 10), giving him a count of 21 in two cards.
 This is a natural or "blackjack". That player will win immediately.
 
----- THE PLAY ----
-The player to the left goes first and must decide whether to "stand" (not ask for another card)
-or "hit" (ask for another card in an attempt to get closer to a count of 21, or even hit 21 exactly).
-Thus, a player may stand on the two cards originally dealt for him, or he may ask the dealer for additional cards, one at a time.
-Until he either decides to stand on the total (if it is 21 or under), or goes "bust" (if it is over 21).
+----  THE PLAY  ----
+The player to the left goes first
+and must decide whether to "stand" (not ask for another card)
+or "hit" (ask for another card in an attempt
+to get closer to a count of 21, or even hit 21 exactly).
+Thus, a player may stand on the two cards originally dealt for,
+or he may ask the dealer for additional cards, one at a time.
+Until he either decides to stand on the total
+(if it is 21 or under), or goes "bust" (if it is over 21).
 In the latter case, the player loses.
 
-The dealer then turns to the next player to his left and serves him in the same manner.
+The dealer then turns to the next player to his left
+and serves him in the same manner.
 
----- THE DEALER'S PLAY ----
-When the dealer has served every player, his face-down card is turned up.
+----  THE DEALER'S PLAY  ----
+When the dealer has served every player,
+his face-down card is turned up.
+
 If the total is 17 or more, he must stand.
-If the total is 16 or under, he must take a card, and continue doing so.
-Until the total is 17 or more, at which point the dealer must stand.
+If the total is 16 or under, he must take a card,
+and continue doing so.
+Until the total is 17 or more,
+at which point the dealer must stand.
 
-The dealer's decisions, then, are automatic on all plays, whereas the player always has the option of taking one or more cards.
+The dealer's decisions, then, are automatic on all plays,
+whereas the player always has the option of taking more cards.
 
 ----------------------------------------
-That's all, now head out and start playing, remember to enjoy yourself!!!
+That's all, now head out and start playing,
+remember to enjoy yourself!!!
 
-(credit: this guidline was created thanks to the help of https://bicyclecards.com/how-to-play/blackjack/)
+----  Credit  ----
+This guidline was written base-on:
+https://bicyclecards.com/how-to-play/blackjack/
 
