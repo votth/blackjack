@@ -15,15 +15,15 @@ class Blackjack {
 
 	public:
 		// menu builder
-		void menu();
-		void recordCreate();
-		void leadingBoard();
+		void Menu();
+		void RecordCreate();
+		void LeadingBoard();
 		void Rule();
 		// game methods
-		void roundStart();	//give out 2 cards for each person
-		void round();		//player takes turn one after another
-		void dealCard(char *);
-		void result();
+		void RoundStart();	//give out 2 cards for each person
+		void Round();		//player takes turn one after another
+		void DealCard(char *);
+		void Result();
 };
 
 #endif

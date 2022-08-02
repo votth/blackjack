@@ -8,6 +8,6 @@
 
 int main() {
 	Blackjack b;
-	b.menu();
+	b.Menu();
 	return 0;
 }
