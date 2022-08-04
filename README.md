@@ -10,6 +10,7 @@ Hopefully I can improve it :^)
 # Problems / To fix
 - Play option [1]'s not working
 - OS neutral code: system(".."), currently work on Linux
+- UI ?
 - TBD
 
 # Fixed

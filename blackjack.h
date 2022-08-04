@@ -7,11 +7,12 @@ class Blackjack {
 			char name[10];
 			char hand[50];
 			int point;
-			char winCount;	//X if busted; and later used for a record bin file
+			char winCount;	// and used for a record bin file
 			struct player *next;
 		};
-		player *actual, *before, *add, *dealer;	//these are for the memory chain's build
-		player *first;
+		// These are for the memory chain's build
+		// player *actual{}, *before{}, *add{}, *dealer{};
+		// player *first{};
 
 	public:
 		// menu builder
