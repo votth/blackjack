@@ -10,48 +10,71 @@
 #include <string>
 
 class Blackjack {
-	private:
-		struct player {
+	class player {
 			std::string name = "";
 			std::string hand = "";
 			int point = 0;
 			char winCount = 'X';	// X lose by default
-			player *next = NULL;
+			player* next = NULL;
 
+		public:
 			~player() {
-				player *tmp = new player;
-				player *head = this;
-				while (head->next) {
-					tmp = head->next;
-					delete(head);
-					head = tmp;
+				player* tmp = this;
+				if (tmp->next != nullptr) {
+					delete tmp->next;
 				}
 			}
 
-			public:
-				virtual void PrintPlayer() {
-					std::cout << "Hand: " << this->hand
-							<< "\nPoint: " << this->point << "\n";
-				}
-		};
-		// These are for the memory chain's build
-		player *firP = new player();
-
-		class dealer : public player {
-			const int hidIndex = 1;
-			const std::string hidCard = "(unkown)";
-
+			player* getNext() {
+				return this->next;
+			}
+			// Edit methods
+			void setName(const std::string& name) {
+				this->name = name;
+			}
+			void updateHand(const std::string& card) {
+				this->hand += card;
+			}
+			void updatePoint(const int& value) {
+				this->point += value;
+			}
+			/* void updateWin(char &c) { */
+			/* 	this->winCount = &c; */
+			/* } */
+			void updateNext(player* next) {
+				this->next = next;
+			}
+			// Print methods
 			void PrintPlayer() {
-				std::cout << "This is the DEALER hand: " << this->hand << "\n";
+				std::cout << "Player " << this->name << "\n"
+						  << "\tHand: " << this->hand
+						  << "\n\tPoint: " << this->point << "\n";
+				std::cout << "--------\n";
 			}
-		};
 
-		// Global variables
-		// card-value pairs
-		const std::string card[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-		const int value[13]     = { 2,   3,   4,   5,   6,   7,   8,   9,   10,   10,     10,      10,     11};
-		// For menu option
-		char pick;
+	};
+	// Node's head
+	player* firP = new player();
+
+	player* dealer = new player();
+	/*
+	class dealer : public player {
+		const int hidIndex = 1;
+		const std::string hidCard = "(unkown)";
+
+		public:
+			void PrintPlayer(player *dealer) {
+				std::cout << "This is the DEALER hand: " << dealer->hand << "\n";
+			}
+	};
+	*/
+
+	// Global variables
+	// card-value pairs
+	const std::string card[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+	const int value[13]		   = { 2,   3,   4,   5,   6,   7,   8,   9,   10,   10,     10,      10,     11};
+	// For menu option
+	char pick{};
 
 	public:
 		// menu builder
@@ -64,7 +87,7 @@ class Blackjack {
 		void Round();		//player takes turn one after another
 		void DealCard(player *curr);
 		void Result();
-
+	
 		//
 		void waitKey() {
 			/*
@@ -76,6 +99,7 @@ class Blackjack {
 			std::cin.get();
 			system("clear");
 		}
+
 };
 
 #endif
