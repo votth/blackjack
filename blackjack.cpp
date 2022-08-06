@@ -97,7 +97,7 @@ void Blackjack::Menu() {
 			case '0': {
 				if (round_count == 0) {
 					std::cout << "Error! Please try again!\n";
-					waitKey();
+					WaitKey();
 					break;
 				}
 				system("clear");
@@ -114,13 +114,13 @@ void Blackjack::Menu() {
 			case '2': {
 				system("clear");
 				LeadingBoard();
-				waitKey();
+				WaitKey();
 				break;
 			}
 			case '3': {
 				system("clear");
 				Rule();
-				waitKey();
+				WaitKey();
 				break;
 			}
 			case '4': {
@@ -129,7 +129,7 @@ void Blackjack::Menu() {
 			}
 			default: {
 				std::cout << "Error! Please try again!\n";
-				waitKey();
+				WaitKey();
 				system("clear");
 				break;
 			}
@@ -141,36 +141,35 @@ void Blackjack::Menu() {
 }
 
 void Blackjack::RoundStart() {
-	player *curP = new player();
+	Players *curP = new Players();
 	firP = nullptr;
 	// Random card value generator
 	srand(time(0));
 
 	for (i = 0; i < playerCount - 1; ++i) {
-		player *newP = new player();
 		// Fill in new player node
-		newP->setName(name[i]);
+		Players *newP = new Players(name[i]);
 		DealCard(newP);
 		DealCard(newP);
 
 		// Add node to chain
 		if (firP) {
-			curP->updateNext(newP);
-			curP = curP->getNext();
+			curP->UpdateNext(newP);
+			curP = curP->GetNext();
 		} else {
 			firP = newP;
 			curP = firP;
 		}
 
-		newP = NULL;
+		newP = nullptr;
 		delete newP;
 	}
 
-	curP = NULL;
+	curP = nullptr;
 	delete curP;
 	// curP->emptyPlayer(curP);
 
-	dealer->setName(name[playerCount - 1]);
+	dealer->SetName(name[playerCount - 1]);
 	DealCard(dealer);
 	DealCard(dealer);
 	// curP->updateNext(dealer);
@@ -187,13 +186,13 @@ void Blackjack::Round() {
 		std::cout << "End of RoundStart(), continue from Round()\n";
 
 		dealer->PrintPlayer();
-		player *tmpP = new player();
+		Players *tmpP = new Players();
 		tmpP = firP;
 		while (tmpP != nullptr) {
 			tmpP->PrintPlayer();
-			tmpP = tmpP->getNext();
+			tmpP = tmpP->GetNext();
 		}
-		tmpP = nulptr;
+		tmpP = nullptr;
 		delete tmpP;
 
 		Menu();
@@ -259,11 +258,11 @@ void Blackjack::Round() {
 }
 
 // Deal card to curPent player's pointer
-void Blackjack::DealCard(player *curP) {
+void Blackjack::DealCard(Players *curP) {
 	r = rand() % 13;
-	curP->updateHand(card[r]);
-	curP->updateHand(" ");
-	curP->updatePoint(value[r]);
+	curP->UpdateHand(card[r]);
+	curP->UpdateHand(" ");
+	curP->UpdatePoint(value[r]);
 }
 
 /*
@@ -335,5 +334,5 @@ void Blackjack::Result() {
 		curP = curP->next;
 	}
 }
-
 */
+
