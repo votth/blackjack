@@ -1,8 +1,8 @@
 #include "blackjack.h"
 
 int main() {
-	Blackjack b;
-	b.Menu();
+	Blackjack B;
+	B.Menu();
 
 	return 0;
 }

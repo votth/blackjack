@@ -14,36 +14,37 @@
 
 class Blackjack {
 private:
+	// Players
 	class Players {
 	protected:
-		std::string name = "";
-		std::string hand = "";
-		int point = 0;
-		char winCount = 'X';
-	private:
+		std::string name{};
+		std::string hand{};
+		int point{};
+		char winCount{};
 		Players* next = nullptr;
 
 	public:
+		// Big three
 		// Constructor
 		Players();
 		Players(const std::string& name);
 		// Destructor
-		~Players();
-		// Edit methods
+		// ~Players();
+		void EmptyLink(Players* head);
+
+		// Methods
+		// Edit
 		void SetName(const std::string& name);
 		void UpdateHand(const std::string& card);
 		void UpdatePoint(const int& value);
 		/* void UpdateWin(char &c) {}; */
 		void UpdateNext(Players* next);
-		// Print methods
+		// Print
 		Players* GetNext();
 		virtual void PrintPlayer();
-
 	};
-	// Node's member
-	Players* firP = new Players();
+
 	// Dealer
-	// player* dealer = new player();
 	class Dealer : public Players {
 		std::string hiddenCard = "";
 		int hiddenPoint = 0;
@@ -51,8 +52,8 @@ private:
 		void PrintPlayer();
 		void HideHand();
 	};
-	Dealer *dealer = new Dealer();
 
+public:
 	// Global variables
 	// card-value pairs
 	/*
@@ -71,21 +72,32 @@ private:
 		 2,   3,   4,   5,   6,   7,   8,   9,
 		 10,   10,     10,      10,     11
 	};
-	// For menu option
+
+	// Menu input
 	char pick{};
+	int round_count = 0;
 
+	// Player data
+	static const int playerCount = 5;
+	const std::string name[playerCount] = {
+		"John", "Kim", "Leo", "Kati", "DEALER"
+	};
+	// Player pointers
+	Players* firP{};
+	Dealer* dealer{};
 
-public:
+	// Global methods
 	// Menu builder
 	void Menu();
 	void RecordCreate();
 	void LeadingBoard();
 	void Rule();
 
-	// Mame methods
+	// Game methods
+	void CreatePlayer();
 	void RoundStart();	//give out 2 cards for each person
 	void Round();		//player takes turn one after another
-	void DealCard(Players *curr);
+	void DealCard(Players* curP);
 	void Result();
 
 	// WaitKey()

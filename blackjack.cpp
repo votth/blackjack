@@ -11,15 +11,7 @@
 // for setw()
 #include <iomanip>
 
-// Variables
-// ???
-int i, r, tmp, round_count;
-// int tmp_point = 0;
-
-// Players
-const int playerCount = 5;
-const std::string name[playerCount] = {"John", "Kim", "Leo", "Kati", "DEALER"};
-
+// Game options
 // Creat record.txt
 void Blackjack::RecordCreate() {
 	std::ofstream fp;
@@ -29,8 +21,8 @@ void Blackjack::RecordCreate() {
 	   << "----------------------------------------\n"
 	   << "\nExplication: O means win, X means lost, - means tied\n\n"
 	   << "\nRound";
-	for (i = 0; i < playerCount - 1; ++i) {
-		fp << "\t\t" << name[i];
+	for (int index = 0; index < playerCount - 1; ++index) {
+		fp << "\t\t" << name[index];
 	}
 	fp << "\n\n";
 	fp.close();
@@ -66,7 +58,8 @@ void Blackjack::LeadingBoard() {
 	f.close();
 }
 
-// Menu
+// Game control
+// Print Menu() and wait for pick option
 void Blackjack::Menu() {
 	// Create record.txt if not existed yet
 	std::string line;
@@ -101,14 +94,13 @@ void Blackjack::Menu() {
 					break;
 				}
 				system("clear");
-				Round();
+				// Round();
 				break;
 			}
 			case '1': {
 				// system("clear");
-				RecordCreate();
 				round_count = 0;
-				Round();
+				RoundStart();
 				break;
 			}
 			case '2': {
@@ -124,7 +116,8 @@ void Blackjack::Menu() {
 				break;
 			}
 			case '4': {
-				std::cout << "Thank you for playing!\tGoodbye!!!\n";
+				/* delete firP; */
+				/* delete dealer; */
 				break;
 			}
 			default: {
@@ -135,23 +128,19 @@ void Blackjack::Menu() {
 			}
 		}
 	}
-
-	/* delete firP; */
-	/* delete dealer; */
 }
 
+// Start of the game
 void Blackjack::RoundStart() {
-	Players *curP = new Players();
-	firP = nullptr;
+	Players *curP{};
 	// Random card value generator
 	srand(time(0));
 
-	for (i = 0; i < playerCount - 1; ++i) {
-		// Fill in new player node
-		Players *newP = new Players(name[i]);
+	// Deal cards to players
+	for (int index = 0; index < playerCount - 1; ++index) {
+		Players *newP = new Players(name[index]);
 		DealCard(newP);
 		DealCard(newP);
-
 		// Add node to chain
 		if (firP) {
 			curP->UpdateNext(newP);
@@ -160,44 +149,45 @@ void Blackjack::RoundStart() {
 			firP = newP;
 			curP = firP;
 		}
-
+		// Free
 		newP = nullptr;
-		delete newP;
+		// newP->EmptyLink(newP);
 	}
 
 	curP = nullptr;
-	delete curP;
-	// curP->emptyPlayer(curP);
+	curP->EmptyLink(curP);
 
+	// Deal cards to DEALER
+	dealer = new Dealer();
 	dealer->SetName(name[playerCount - 1]);
 	DealCard(dealer);
 	DealCard(dealer);
 	// curP->updateNext(dealer);
 
+	Round();
 }
 
+// Draw phase
 void Blackjack::Round() {
+	std::cout << "RoundStart() ended, continue from Round()\n";
 	// player *curP = new player();
 	do {
 		round_count++;
 		std::cout << "----  Round " << std::setw(2) << round_count << "  ----\n";
-		RoundStart();
 
-		std::cout << "End of RoundStart(), continue from Round()\n";
-
+		// DEBUG
+		// Print out all players' hand
 		dealer->PrintPlayer();
-		Players *tmpP = new Players();
-		tmpP = firP;
+		Players *tmpP = firP;
 		while (tmpP != nullptr) {
 			tmpP->PrintPlayer();
 			tmpP = tmpP->GetNext();
 		}
-		tmpP = nullptr;
-		delete tmpP;
-
+		tmpP->EmptyLink(tmpP);
 		Menu();
 
 		/*
+		int draw{};	// for draw card decision
 		curP = firP;
 		// will stop right at dealer's data
 		while (curP->next) {
@@ -213,14 +203,14 @@ void Blackjack::Round() {
 				std::cout << "------------\n";
 				std::cout << "What do you want to do?"
 						  << "\n[1] Stand\n[2] Hit";
-				std::cin >> tmp;
+				std::cin >> draw;
 				tmp_point = curP->point;
-				while (tmp != 1 && tmp != 2) {
+				while (draw != 1 && draw != 2) {
 					std::cout << "Error!"
 							  << "\n[1] Stand\n[2] Hit";
-					std::cin >> tmp;
+					std::cin >> draw;
 				}
-				if (tmp==1) {
+				if (draw==1) {
 					std::cout << "Hand: " << curP->hand
 							  << "\nPoint: " << curP->point << "\n";
 					std::cout << "------------\n";
@@ -240,7 +230,7 @@ void Blackjack::Round() {
 						std::cout << "Hand: " << curP->hand
 								  << "\nPoint: " << curP->point <<"\n";
 				}
-			} while(tmp!=1);
+			} while(draw!=1);
 			std::getchar();
 			curP = curP->next;
 			system("clear");
@@ -254,18 +244,21 @@ void Blackjack::Round() {
 		system("clear");
 		*/
 	} while(pick == '1');
-	// delete(curP);
+
+	// Exit Round() loop, ending game before back to Menu()
+	firP->EmptyLink(firP);
+	dealer->EmptyLink(dealer);
 }
 
-// Deal card to curPent player's pointer
+// DealCard
 void Blackjack::DealCard(Players *curP) {
-	r = rand() % 13;
-	curP->UpdateHand(card[r]);
+	int rando = rand() % 13;
+	curP->UpdateHand(card[rando]);
 	curP->UpdateHand(" ");
-	curP->UpdatePoint(value[r]);
+	curP->UpdatePoint(value[rando]);
 }
 
-/*
+/* Result
 void Blackjack::Result() {
 	// FILE *f;
 	// f = fopen("record.txt", "a");
