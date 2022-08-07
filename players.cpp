@@ -19,11 +19,6 @@ Blackjack::Players::Players(const std::string& name) {
 }
 // Copy ctor
 // Destructor
-/*
-Blackjack::Players::~Players() {
-	EmptyLink(this);
-}
-*/
 void Blackjack::Players::EmptyLink(Players* head) {
 	Players* tmp = head;
 	while (head != nullptr) {
@@ -33,7 +28,7 @@ void Blackjack::Players::EmptyLink(Players* head) {
 	}
 }
 
-// Edit methods
+// Setters
 void Blackjack::Players::SetName(const std::string& name) {
 	this->name = name;
 }
@@ -50,13 +45,15 @@ void Blackjack::Players::UpdateNext(Players* next) {
 	this->next = next;
 }
 
-// Print methods
+// Getters
 int Blackjack::Players::GetPoint() {
 	return this->point;
 }
 Blackjack::Players* Blackjack::Players::GetNext() {
 	return this->next;
 }
+
+// Print
 void Blackjack::Players::PrintPlayer() {
 	std::cout << "Player " << this->name << "\n"
 			  << "\tHand: " << this->hand
@@ -72,6 +69,8 @@ void Blackjack::Dealer::PrintPlayer() {
 			  << "\n\tPoint: " << this->point << "\n";
 	std::cout <<"---------\n";
 }
+
+// Flip 2nd card to (unknown)
 void Blackjack::Dealer::HideHand() {
 	const std::string delimeter = " ";
 
