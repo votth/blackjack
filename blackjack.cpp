@@ -146,6 +146,7 @@ void Blackjack::RoundStart() {
 	firP = nullptr;
 
 	Players *curP{};
+	firP = nullptr;
 	// Random card value generator
 	srand(time(0));
 
