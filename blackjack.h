@@ -54,6 +54,7 @@ private:
 		void UpdateWin(const char& c);
 		void UpdateNext(Players* next);
 		// Print
+		std::string GetName();
 		int GetPoint();
 		Players* GetNext();
 		virtual void PrintPlayer();
@@ -71,11 +72,11 @@ private:
 public:
 	// Menu input
 	char pick{};
-	int round_count = 0;
+	int GameCounter = 0;
 
 	// Player data
 	static const int playerCount = 5;
-	const std::string name[playerCount] = {
+	const std::string names[playerCount] = {
 		"John", "Kim", "Leo", "Kati", "DEALER"
 	};
 	// Player pointers
@@ -90,10 +91,12 @@ public:
 	void Rule();
 
 	// Game methods
-	void RoundStart();	//give out 2 cards for each person
-	void PlayerTurn();		//player takes turn one after another
 	void DealCard(Players* curP);
+	void RoundStart();	//give out 2 cards for each person
+	void PlayerTurn();	//player takes turn one after another
+	void DealerTurn();	//
 	void Result();
+	void EndGame();
 
 	// WaitKey()
 	void WaitKey() {

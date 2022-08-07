@@ -1,7 +1,6 @@
 // HEADERS
 // Custom headers
 #include "blackjack.h"
-
 // STD headers
 #include <ctime>
 #include <cstring>
@@ -20,9 +19,9 @@ void Blackjack::RecordCreate() {
 	   << "-----         Record table         -----\n"
 	   << "----------------------------------------\n"
 	   << "\nExplication: O means win, X means lost, - means tied\n\n"
-	   << "\nRound";
+	   << "\nGame";
 	for (int index = 0; index < playerCount - 1; ++index) {
-		fp << "\t\t" << name[index];
+		fp << "\t\t" << names[index];
 	}
 	fp << "\n\n";
 	fp.close();
@@ -61,19 +60,19 @@ void Blackjack::LeadingBoard() {
 // Game control
 // Print Menu() and wait for pick option
 void Blackjack::Menu() {
+	system("clear");
 	// Create record.txt if not existed yet
 	std::string line;
 	std::ifstream f;
 	f.open("record.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
-			round_count++;
+			GameCounter++;
 		}
 	} else RecordCreate();
 	f.close();
 	// Count record log
-	round_count -= 9;
-	if (round_count < 0) round_count = 0;
+	if (GameCounter <= 9) GameCounter = 0;
 
 	while (pick != '4') {
 		std::cout << "----------------------------------------\n"
@@ -81,14 +80,14 @@ void Blackjack::Menu() {
 				  << "----------------------------------------\n"
 				  << "Please choose from the below functions:\n";
 		//if 1st start out or have reset (chosen New) then don't print out option [0]
-		if (round_count != 0)
+		if (GameCounter != 0)
 			std::cout << "\t[0]\tContinue\n\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
 		else
 			std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
 		std::cin >> pick;
 		switch (pick) {
 			case '0': {
-				if (round_count == 0) {
+				if (GameCounter == 0) {
 					std::cout << "Error! Please try again!\n";
 					WaitKey();
 					break;
@@ -99,7 +98,7 @@ void Blackjack::Menu() {
 			}
 			case '1': {
 				// system("clear");
-				round_count = 0;
+				GameCounter = 0;
 				RoundStart();
 				break;
 			}
@@ -130,15 +129,25 @@ void Blackjack::Menu() {
 	}
 }
 
+// DealCard
+void Blackjack::DealCard(Players *curP) {
+	int rando = rand() % 13;
+	curP->UpdateHand(cards[rando]);
+	curP->UpdateHand(" ");
+	curP->UpdatePoint(values[rando]);
+}
+
 // Start of the game
 void Blackjack::RoundStart() {
+	system("clear");
+	GameCounter++;
 	Players *curP{};
 	// Random card value generator
 	srand(time(0));
 
 	// Deal cards to DEALER
 	dealer = new Dealer();
-	dealer->SetName(name[playerCount - 1]);
+	dealer->SetName(names[playerCount - 1]);
 	DealCard(dealer);
 	DealCard(dealer);
 	if (dealer->GetPoint() == 21) {
@@ -147,7 +156,7 @@ void Blackjack::RoundStart() {
 
 	// Deal cards to players
 	for (int index = 0; index < playerCount - 1; ++index) {
-		Players *newP = new Players(name[index]);
+		Players *newP = new Players(names[index]);
 		DealCard(newP);
 		DealCard(newP);
 		if (newP->GetPoint() == 21) {
@@ -167,14 +176,16 @@ void Blackjack::RoundStart() {
 		newP->EmptyLink(newP);
 	}
 
+	// Natural: win by default
 	if (BJack) {
-		// Result();
+		// EndGame();
 	}
 
-	std::cout << "----  Initial Round  ----\n";
+	std::cout << "----  Initial Round  ----\n\n";
 	// Print out all players' hand
-	// Hide DEALER hand
+	// DEALER's hand
 	dealer->HideHand();
+	dealer->PrintPlayer();
 	// Players' hand
 	curP = firP;
 	while (curP != nullptr) {
@@ -182,100 +193,99 @@ void Blackjack::RoundStart() {
 		curP = curP->GetNext();
 	}
 	curP->EmptyLink(curP);
-	// DEALER's hand
-	dealer->PrintPlayer();
 
+	std::cout << "[Enter] Players' turn... ";
 	WaitKey();
 	PlayerTurn();
 }
 
 // Players' turn
 void Blackjack::PlayerTurn() {
-	return;
-	do {
-		round_count++;
-		std::cout << "----  Round " << std::setw(2) << round_count << "  ----\n";
+	Players* curP{};
+	curP = firP;
+	std::string curName{};
+	int draw{};		// for draw card decision
 
-		/*
-		int draw{};	// for draw card decision
-		curP = firP;
-		// will stop right at dealer's data
-		while (curP->next) {
-			if (curP->winCount == 'O') { // If already got Blackjack then skip to the next player
-				curP = curP->next;
-				continue;
-			}
-			std::cout << "---- Round " << round_count << "----\n";
-			std::cout << "---- " << curP->name <<"'s turn----\n"
-					  << "Hand: " << curP->hand
-					  << "\nPoint: " << curP->point << "\n";
-			do {
-				std::cout << "------------\n";
-				std::cout << "What do you want to do?"
-						  << "\n[1] Stand\n[2] Hit";
-				std::cin >> draw;
-				tmp_point = curP->point;
-				while (draw != 1 && draw != 2) {
-					std::cout << "Error!"
-							  << "\n[1] Stand\n[2] Hit";
-					std::cin >> draw;
-				}
-				if (draw==1) {
-					std::cout << "Hand: " << curP->hand
-							  << "\nPoint: " << curP->point << "\n";
-					std::cout << "------------\n";
-				} else {
-					DealCard(curP);
-					curP->point = tmp_point;
-					if (curP->point > 21) {
-						std::cout << "Busted!\n";
-						curP->winCount = 'X';
-						std::cout << "Hand: " << curP->hand
-								  << "\nPoint: " << curP->point
-								  <<"\t(x)\n";
-						std::cout << "------------\n";
-						break;
-					}
-					else
-						std::cout << "Hand: " << curP->hand
-								  << "\nPoint: " << curP->point <<"\n";
-				}
-			} while(draw!=1);
-			std::getchar();
-			curP = curP->next;
-			system("clear");
-		}
-
-		Result();
-		std::cout << "\n\n"
-				  << "Do you want to keep playing?"
-				  << "\n[1] Yes\n[2] No\n";
-		std::cin >> pick;
+	// Move through players
+	while (curP) {
 		system("clear");
-		*/
-	} while(pick == '1');
+		curName = curP->GetName();
+		std::cout << "----  Players' turn  ----\n\n";
+		dealer->PrintPlayer();
 
+		// Draw decision, looping for multiple cards
+		do {
+			curP->PrintPlayer();
+			std::cout << curName << ", what is your choice?\n"
+					  << "\t[1] Stand\t\t[2] Hit\n";
+			std::cin >> draw;
+			// Input checker
+			while (draw != 1 && draw != 2) {
+				std::cout << "Please pick again:\n"
+						  << "\t[1] Stand\t\t[2] Hit\n";
+				std::cin >> draw;
+			}
+
+			// Outcomes
+			if (draw == 1) {
+				std::cout << curName << " chose to Stand!\n\n"
+						  << "---- Final hand ----\n";
+				curP->PrintPlayer();
+			} else {
+				std::cout << curName << " chose to Hit...\n\n";
+				system("sleep 0.5");
+				DealCard(curP);
+				if (curP->GetPoint() > 21) {
+					std::cout << "Busted!!!\n";
+					curP->PrintPlayer();
+					std::cout << "---- Eliminated! ----\n\n";
+					draw = 1;
+				} else {
+					std::cout << curName << "'s new hand:\n";
+				}
+			}
+		} while(draw != 1);
+
+		// Move to next player
+		std::cout << "[Enter] Next player... ";
+		WaitKey();
+		curP = curP->GetNext();
+	}
+
+	// Move to DEALER's turn
+	std::cout << "[Enter] DEALER's turn... ";
+	WaitKey();
+	DealerTurn();
+
+	// DEBUG
+	// To avoid memory leak error when debugging
 	// Exit Round() loop, ending game before back to Menu()
 	firP->EmptyLink(firP);
 	dealer->EmptyLink(dealer);
+
+	// Jump to Result(); ?
+
 }
 
-// DealCard
-void Blackjack::DealCard(Players *curP) {
-	int rando = rand() % 13;
-	curP->UpdateHand(cards[rando]);
-	curP->UpdateHand(" ");
-	curP->UpdatePoint(values[rando]);
+// DEALER's turn
+void Blackjack::DealerTurn() {
+	// Split HideHand to substr
+	//
+	// Print out 1st card and hiddenCard
+	//
+	// Draw and print out new card
+	//
+	// End
 }
 
-/* Result
+/*
 void Blackjack::Result() {
 	// FILE *f;
 	// f = fopen("record.txt", "a");
-	// fprintf(f, "%3d", round_count);
+	// fprintf(f, "%3d", GameCounter);
 	std::ofstream f;
 	f.open("record.txt");
-	f << std::setw(3) << round_count;
+	f << std::setw(3) << GameCounter;
 
 	tmp_point = dealer->point;
 	while (dealer->point < 17) {
@@ -336,6 +346,13 @@ void Blackjack::Result() {
 					  << "\nPoint: " << curP->point << "\n";
 		curP = curP->next;
 	}
+
+	std::cout << "\n\n"
+			  << "Do you want to keep playing?"
+			  << "\n[1] Yes\n[2] No\n";
+	std::cin >> pick;
+	system("clear");
+
 }
 */
 
