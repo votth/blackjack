@@ -141,6 +141,10 @@ void Blackjack::DealCard(Players *curP) {
 void Blackjack::RoundStart() {
 	system("clear");
 	GameCounter++;
+
+	// For when starting [1] again
+	firP = nullptr;
+
 	Players *curP{};
 	// Random card value generator
 	srand(time(0));
@@ -254,12 +258,11 @@ void Blackjack::PlayerTurn() {
 
 	// Move to DEALER's turn
 	std::cout << "[Enter] DEALER's turn... ";
-	WaitKey();
+	std::getchar();
 	DealerTurn();
 
 	// DEBUG
 	// To avoid memory leak error when debugging
-	// Exit Round() loop, ending game before back to Menu()
 	firP->EmptyLink(firP);
 	dealer->EmptyLink(dealer);
 
@@ -269,13 +272,34 @@ void Blackjack::PlayerTurn() {
 
 // DEALER's turn
 void Blackjack::DealerTurn() {
-	// Split HideHand to substr
-	//
-	// Print out 1st card and hiddenCard
-	//
-	// Draw and print out new card
-	//
+	system("clear");
+	// Reveal hand
+	std::cout << "---- DEALER's turn ----\n\n";
+	std::cout << "Hand reveal...\n";
+	// WIP
+	dealer->PrintPlayer();
+	system("sleep 2");
+
+	// Deal more card
+	do {
+		system("clear");
+		std::cout << "---- DEALER's turn ----\n\n";
+		std::cout << "Drawing more cards...\n";
+
+		DealCard(dealer);
+		dealer->PrintPlayer();
+		system("sleep 1.2");
+
+	} while (dealer->GetPoint() < 80); // < 17
+
 	// End
+	std::cout << "DEALER's final hand:\n";
+	dealer->PrintPlayer();
+
+	std::cout << "[Enter] Announcing result... ";
+	std::cout << "\n\t WIP \n\n";
+	std::getchar();
+	system("clear");
 }
 
 /*
