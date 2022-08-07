@@ -276,7 +276,7 @@ void Blackjack::DealerTurn() {
 	// Reveal hand
 	std::cout << "---- DEALER's turn ----\n\n";
 	std::cout << "Hand reveal...\n";
-	// develop edit
+	// Merge develop with feature
 	// WIP
 	dealer->PrintPlayer();
 	system("sleep 2");
