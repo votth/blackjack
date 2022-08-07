@@ -46,6 +46,9 @@ void Blackjack::Players::UpdateNext(Players* next) {
 }
 
 // Getters
+std::string Blackjack::Players::GetName() {
+	return this->name;
+}
 int Blackjack::Players::GetPoint() {
 	return this->point;
 }
@@ -55,19 +58,17 @@ Blackjack::Players* Blackjack::Players::GetNext() {
 
 // Print
 void Blackjack::Players::PrintPlayer() {
-	std::cout << "Player " << this->name << "\n"
-			  << "\tHand: " << this->hand
-			  << "\n\tPoint: " << this->point << "\n";
-	std::cout << "--------\n";
+	std::cout << "--- Player " << this->name << " ---\n"
+			  << "\tHand:  " << this->hand
+			  << "\n\tPoint: " << this->point << "\n\n";
 }
 
 
 // DEALER
 void Blackjack::Dealer::PrintPlayer() {
-	std::cout << "The DEALER:\n"
-			  << "\tHand: " << this->hand
-			  << "\n\tPoint: " << this->point << "\n";
-	std::cout <<"---------\n";
+	std::cout << "||    The DEALER\n"
+			  << "||\tHand:  " << this->hand
+			  << "\n||\tPoint: " << this->point << "\n\n";
 }
 
 // Flip 2nd card to (unknown)
