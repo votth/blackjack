@@ -8,9 +8,23 @@
 #include <limits>
 // string
 #include <string>
-// map
+#include <cstring>
+// DST
+#include <array>
 #include <map>
 
+// Global variables
+// card-value pairs
+const std::array<std::string, 13> cards = {
+	"2", "3", "4", "5", "6", "7", "8", "9",
+	"10", "Jack", "Queen", "King", "Ace"
+};
+const std::array<int, 13> values = {
+		2,   3,   4,   5,   6,   7,   8,   9,
+		10,   10,     10,      10,     11
+};
+// Blackjack notifier
+static bool BJack = false;
 
 class Blackjack {
 private:
@@ -37,9 +51,10 @@ private:
 		void SetName(const std::string& name);
 		void UpdateHand(const std::string& card);
 		void UpdatePoint(const int& value);
-		/* void UpdateWin(char &c) {}; */
+		void UpdateWin(const char& c);
 		void UpdateNext(Players* next);
 		// Print
+		int GetPoint();
 		Players* GetNext();
 		virtual void PrintPlayer();
 	};
@@ -54,25 +69,6 @@ private:
 	};
 
 public:
-	// Global variables
-	// card-value pairs
-	/*
-	const std::map<std::string, int> card {
-		{"2", 2}, {"3", 3}, {"4", 4},
-		{"5", 5}, {"6", 6}, {"7", 7},
-		{"8", 8}, {"9", 9}, {"10", 10},
-		{"Jack", 10}, {"Queen", 10}, {"King", 10}, {"Ace", 11}
-	};
-	*/
-	const std::string card[13] = {
-		"2", "3", "4", "5", "6", "7", "8", "9",
-		"10", "Jack", "Queen", "King", "Ace"
-	};
-	const int value[13] = {
-		 2,   3,   4,   5,   6,   7,   8,   9,
-		 10,   10,     10,      10,     11
-	};
-
 	// Menu input
 	char pick{};
 	int round_count = 0;
@@ -94,9 +90,8 @@ public:
 	void Rule();
 
 	// Game methods
-	void CreatePlayer();
 	void RoundStart();	//give out 2 cards for each person
-	void Round();		//player takes turn one after another
+	void PlayerTurn();		//player takes turn one after another
 	void DealCard(Players* curP);
 	void Result();
 

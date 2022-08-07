@@ -43,14 +43,17 @@ void Blackjack::Players::UpdateHand(const std::string& card) {
 void Blackjack::Players::UpdatePoint(const int& value) {
 	this->point += value;
 }
-/* void Blackjack::Player::UpdateWin(char &c) { */
-/* 	this->winCount = &c; */
-/* } */
+void Blackjack::Players::UpdateWin(const char& c) {
+	this->winCount = c;
+}
 void Blackjack::Players::UpdateNext(Players* next) {
 	this->next = next;
 }
 
 // Print methods
+int Blackjack::Players::GetPoint() {
+	return this->point;
+}
 Blackjack::Players* Blackjack::Players::GetNext() {
 	return this->next;
 }
@@ -63,9 +66,33 @@ void Blackjack::Players::PrintPlayer() {
 
 
 // DEALER
-void Blackjack::Dealer::HideHand() {
-}
 void Blackjack::Dealer::PrintPlayer() {
-	std::cout << "This is the DEALER hand: " << this->hand << "\n\n";
+	std::cout << "The DEALER:\n"
+			  << "\tHand: " << this->hand
+			  << "\n\tPoint: " << this->point << "\n";
+	std::cout <<"---------\n";
+}
+void Blackjack::Dealer::HideHand() {
+	const std::string delimeter = " ";
+
+	// Hide card
+	// find start and end index of the 2nd word/card
+	int start = this->hand.find(delimeter) + 1;
+	int end = this->hand.find(delimeter, start);
+	// extract word
+	std::string extracted = this->hand.substr(start, end - start);
+	this->hiddenCard = extracted;
+	// replace word
+	this->hand.erase(start, end - start);
+	this->hand.insert(start, "(unknown)");
+
+	// Hide value
+	for (int i = 0; i < 13; ++i) {
+		if (extracted == cards[i]) {
+			this->hiddenPoint = values[i];
+			this->point -= values[i];
+			break;
+		}
+	}
 }
 

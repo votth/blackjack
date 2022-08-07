@@ -94,7 +94,7 @@ void Blackjack::Menu() {
 					break;
 				}
 				system("clear");
-				// Round();
+				// PlayerTurn();
 				break;
 			}
 			case '1': {
@@ -116,8 +116,8 @@ void Blackjack::Menu() {
 				break;
 			}
 			case '4': {
-				/* delete firP; */
-				/* delete dealer; */
+				std::cout << "\nThe game is exiting...\n\n";
+				// ExitGame();
 				break;
 			}
 			default: {
@@ -136,11 +136,24 @@ void Blackjack::RoundStart() {
 	// Random card value generator
 	srand(time(0));
 
+	// Deal cards to DEALER
+	dealer = new Dealer();
+	dealer->SetName(name[playerCount - 1]);
+	DealCard(dealer);
+	DealCard(dealer);
+	if (dealer->GetPoint() == 21) {
+		BJack = true;
+	}
+
 	// Deal cards to players
 	for (int index = 0; index < playerCount - 1; ++index) {
 		Players *newP = new Players(name[index]);
 		DealCard(newP);
 		DealCard(newP);
+		if (newP->GetPoint() == 21) {
+			newP->UpdateWin('O');
+			BJack = true;
+		}
 		// Add node to chain
 		if (firP) {
 			curP->UpdateNext(newP);
@@ -151,40 +164,37 @@ void Blackjack::RoundStart() {
 		}
 		// Free
 		newP = nullptr;
-		// newP->EmptyLink(newP);
+		newP->EmptyLink(newP);
 	}
 
-	curP = nullptr;
+	if (BJack) {
+		// Result();
+	}
+
+	std::cout << "----  Initial Round  ----\n";
+	// Print out all players' hand
+	// Hide DEALER hand
+	dealer->HideHand();
+	// Players' hand
+	curP = firP;
+	while (curP != nullptr) {
+		curP->PrintPlayer();
+		curP = curP->GetNext();
+	}
 	curP->EmptyLink(curP);
+	// DEALER's hand
+	dealer->PrintPlayer();
 
-	// Deal cards to DEALER
-	dealer = new Dealer();
-	dealer->SetName(name[playerCount - 1]);
-	DealCard(dealer);
-	DealCard(dealer);
-	// curP->updateNext(dealer);
-
-	Round();
+	WaitKey();
+	PlayerTurn();
 }
 
-// Draw phase
-void Blackjack::Round() {
-	std::cout << "RoundStart() ended, continue from Round()\n";
-	// player *curP = new player();
+// Players' turn
+void Blackjack::PlayerTurn() {
+	return;
 	do {
 		round_count++;
 		std::cout << "----  Round " << std::setw(2) << round_count << "  ----\n";
-
-		// DEBUG
-		// Print out all players' hand
-		dealer->PrintPlayer();
-		Players *tmpP = firP;
-		while (tmpP != nullptr) {
-			tmpP->PrintPlayer();
-			tmpP = tmpP->GetNext();
-		}
-		tmpP->EmptyLink(tmpP);
-		Menu();
 
 		/*
 		int draw{};	// for draw card decision
@@ -253,9 +263,9 @@ void Blackjack::Round() {
 // DealCard
 void Blackjack::DealCard(Players *curP) {
 	int rando = rand() % 13;
-	curP->UpdateHand(card[rando]);
+	curP->UpdateHand(cards[rando]);
 	curP->UpdateHand(" ");
-	curP->UpdatePoint(value[rando]);
+	curP->UpdatePoint(values[rando]);
 }
 
 /* Result
