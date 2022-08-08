@@ -14,7 +14,7 @@
 // Creat record.txt
 void Blackjack::RecordCreate() {
 	std::ofstream fp;
-	fp.open("record.txt");
+	fp.open("logs/record.txt");
 	fp << "----------------------------------------\n"
 	   << "-----         Record table         -----\n"
 	   << "----------------------------------------\n"
@@ -31,7 +31,7 @@ void Blackjack::RecordCreate() {
 void Blackjack::Rule() {
 	std::string line;
 	std::ifstream f;
-	f.open("./rule.txt");
+	f.open("logs/rule.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
 			std::cout << line << "\n";
@@ -46,7 +46,7 @@ void Blackjack::Rule() {
 void Blackjack::LeadingBoard() {
 	std::string line;
 	std::ifstream f;
-	f.open("./record.txt");
+	f.open("logs/record.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
 			std::cout << line << "\n";
@@ -64,7 +64,7 @@ void Blackjack::Menu() {
 	// Create record.txt if not existed yet
 	std::string line;
 	std::ifstream f;
-	f.open("record.txt");
+	f.open("logs/record.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
 			GameCounter++;
