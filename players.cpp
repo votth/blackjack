@@ -62,6 +62,13 @@ void Blackjack::Players::PrintPlayer() {
 			  << "\tHand:  " << this->hand
 			  << "\n\tPoint: " << this->point << "\n\n";
 }
+void Blackjack::Players::AllPlayer() {
+	Players* curP = this;
+	while (curP != nullptr) {
+		curP->PrintPlayer();
+		curP = curP->GetNext();
+	}
+}
 
 
 // DEALER

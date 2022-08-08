@@ -178,7 +178,7 @@ void Blackjack::RoundStart() {
 		}
 		// Free
 		newP = nullptr;
-		newP->EmptyLink(newP);
+		// newP->EmptyLink(newP);
 	}
 
 	// Natural: win by default
@@ -192,12 +192,8 @@ void Blackjack::RoundStart() {
 	dealer->HideHand();
 	dealer->PrintPlayer();
 	// Players' hand
-	curP = firP;
-	while (curP != nullptr) {
-		curP->PrintPlayer();
-		curP = curP->GetNext();
-	}
-	curP->EmptyLink(curP);
+	firP->AllPlayer();
+	// curP->EmptyLink(curP);
 
 	std::cout << "[Enter] Players' turn... ";
 	WaitKey();
@@ -294,11 +290,13 @@ void Blackjack::DealerTurn() {
 		dealer->PrintPlayer();
 		system("sleep 1.2");
 
-	} while (dealer->GetPoint() < 80); // < 17
+	} while (dealer->GetPoint() < 17);
 
-	// End
-	std::cout << "DEALER's final hand:\n";
+	// Final hand
+	system("clear");
+	std::cout << "---- Players' final hand ----\n\n";
 	dealer->PrintPlayer();
+	firP->AllPlayer();
 
 	std::cout << "[Enter] Announcing result... ";
 	std::cout << "\n\t WIP \n\n";
