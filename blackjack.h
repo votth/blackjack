@@ -11,10 +11,19 @@
 #include <cstring>
 // DST
 #include <array>
-#include <map>
 
 // Global variables
 // card-value pairs
+/* Switching cards DST to using std::map
+ * #include <map>
+ * const std::map<std::string, int> cards = {
+ *	{"2", 2}, {"3", 3}, {"4", 4},
+ *	{"5", 5}, {"6", 6}, {"7", 7},
+ *	{"8", 8}, {"9", 9}, {"10", 10},
+ *	{"Jack", 10}, {"Queen", 10},
+ *	{"King", 10}, {"Ace", 11}
+ * }
+ */
 const std::array<std::string, 13> cards = {
 	"2", "3", "4", "5", "6", "7", "8", "9",
 	"10", "Jack", "Queen", "King", "Ace"
