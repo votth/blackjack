@@ -279,6 +279,15 @@ void Blackjack::DealerTurn() {
 	std::cout << "Hand reveal...\n";
 
 	// Placeholder for revealing hand algo
+	//
+	// split dealer->hand into substr
+	//
+	// replace "(unknown)" with &hiddenCard
+	//
+	// restore dealer->point with &hiddenPoint
+	//
+	// reveal hand slowly by flipping (unknown) to true value??
+	//
 
 	// WIP
 	dealer->PrintPlayer();
