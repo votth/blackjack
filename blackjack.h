@@ -11,7 +11,6 @@
 #include <cstring>
 // DST
 #include <array>
-#include <map>
 
 // Global variables
 // card-value pairs
@@ -23,6 +22,7 @@ const std::array<int, 13> values = {
 		2,   3,   4,   5,   6,   7,   8,   9,
 		10,   10,     10,      10,     11
 };
+
 // Blackjack notifier
 static bool BJack = false;
 
@@ -54,10 +54,13 @@ private:
 		void UpdateWin(const char& c);
 		void UpdateNext(Players* next);
 		// Print
+		virtual Players* GetThis();
 		std::string GetName();
+		std::string GetHand();
 		int GetPoint();
 		Players* GetNext();
 		virtual void PrintPlayer();
+		void AllPlayer();
 	};
 
 	// Dealer
@@ -67,6 +70,7 @@ private:
 	public:
 		void PrintPlayer();
 		void HideHand();
+		void RevealHand();
 	};
 
 public:
