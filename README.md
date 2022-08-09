@@ -6,9 +6,10 @@ Initial files were from Feb/2020, very badly mixed C/C++ code.
 Hopefully I can improve it :^)
 
 # Problems / To fix
-- Logic for Dealer's hand reveal
-- OS neutral code: system(".."), currently work on Linux
-- UI ?
+- Error with 'Input checker' in Menu() and PlayerTurn()
+- Platform independent (Linux only atm)
+- Improve UI: remove system(...), duplicate std::cout
+
 - TBD
 
 # Fixed
@@ -16,3 +17,4 @@ Hopefully I can improve it :^)
 - Commenting
 - Remove mixture of C code
 - Play option [1]'s working
+- Logic for Dealer's hand reveal

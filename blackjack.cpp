@@ -76,7 +76,7 @@ void Blackjack::Menu() {
 
 	while (pick != '4') {
 		std::cout << "----------------------------------------\n"
-				  << "-----   Blackjack  Simulator  1.2  -----\n"
+				  << "-----  Blackjack  Simulator  1.2.1  ----\n"
 				  << "----------------------------------------\n"
 				  << "Please choose from the below functions:\n";
 		std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
