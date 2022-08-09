@@ -1,9 +1,0 @@
-----------------------------------------
------         Record table         -----
-----------------------------------------
-
-Explication: O means win, X means lost, - means tied
-
-
-Game		John		Kim		Leo		Kati
-

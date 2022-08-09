@@ -14,7 +14,7 @@
 // Creat record.txt
 void Blackjack::RecordCreate() {
 	std::ofstream fp;
-	fp.open("record.txt");
+	fp.open("logs/record.txt");
 	fp << "----------------------------------------\n"
 	   << "-----         Record table         -----\n"
 	   << "----------------------------------------\n"
@@ -46,7 +46,7 @@ void Blackjack::Rule() {
 void Blackjack::LeadingBoard() {
 	std::string line;
 	std::ifstream f;
-	f.open("./record.txt");
+	f.open("logs/record.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
 			std::cout << line << "\n";
@@ -59,12 +59,11 @@ void Blackjack::LeadingBoard() {
 
 // Game control
 // Print Menu() and wait for pick option
-void Blackjack::Menu() {
-	system("clear");
+void Blackjack::Menu() { system("clear");
 	// Create record.txt if not existed yet
 	std::string line;
 	std::ifstream f;
-	f.open("record.txt");
+	f.open("logs/record.txt");
 	if (f.is_open()) {
 		while (std::getline(f, line)) {
 			GameCounter++;
@@ -72,7 +71,9 @@ void Blackjack::Menu() {
 	} else RecordCreate();
 	f.close();
 	// Count record log
-	if (GameCounter <= 9) GameCounter = 0;
+	if (GameCounter < 9) {
+		GameCounter = 0;
+	} else GameCounter -= 9;
 
 	while (pick != '4') {
 		std::cout << "----------------------------------------\n"
@@ -82,19 +83,8 @@ void Blackjack::Menu() {
 		std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
 		std::cin >> pick;
 		switch (pick) {
-			case '0': {
-				if (GameCounter == 0) {
-					std::cout << "Error! Please try again!\n";
-					WaitKey();
-					break;
-				}
-				system("clear");
-				// PlayerTurn();
-				break;
-			}
 			case '1': {
 				// system("clear");
-				GameCounter = 0;
 				RoundStart();
 				break;
 			}
@@ -312,84 +302,76 @@ void Blackjack::DealerTurn() {
 	firP->AllPlayer();
 
 	std::cout << "[Enter] Announcing result... ";
-	std::cout << "\n\t WIP \n\n";
 	WaitKey();
+
+	Result();
 }
 
-/*
 void Blackjack::Result() {
-	// FILE *f;
-	// f = fopen("record.txt", "a");
-	// fprintf(f, "%3d", GameCounter);
+	system("clear");
+	Players* curP = firP;
+	int dPoint = dealer->GetPoint();
+
+	// Open record to write
 	std::ofstream f;
-	f.open("record.txt");
+	f.open("logs/record.txt", std::ios_base::app);	// append mode
 	f << std::setw(3) << GameCounter;
 
-	tmp_point = dealer->point;
-	while (dealer->point < 17) {
-		DealCard(dealer);
-		dealer->point = tmp_point;
-	}
-	std::cout << dealer->name << ":\n"
-			  << "Hand: " << dealer->hand
-			  << "\nPoint: " << dealer->point << "\n\n\n";
-	curP = firP;
-	if (dealer->point>21) {
-		while (curP->next) {
-			if (curP->winCount != 'X')
-				curP->winCount = 'O';
-			// fprintf(f, "\t\t%c", curP->winCount);
-			f << "\t\t" << curP->winCount;
-			curP = curP->next;
+	// Compare point to DEALER's and write
+	if (dPoint > 21) {
+		while (curP) {
+			if (curP->GetPoint() <= 21) {
+				curP->UpdateWin('O');
+			}
+			f << "\t\t" << curP->GetWin();
+			curP = curP->GetNext();
 		}
 	} else {
-		while(curP->next){
-			if(curP->winCount != 'X')
-				if(curP->point > dealer->point)
-					curP->winCount = 'O';
-				else {
-					if(curP->point < dealer->point)
-						curP->winCount = 'X';
-					else
-						curP->winCount = '-';
+		dealer->UpdateWin('-');		// undecided mark
+		while (curP) {
+			if (curP->GetPoint() <= 21) {
+				if(curP->GetPoint() > dPoint) {
+					curP->UpdateWin('O');
+				} else if (curP->GetPoint() == dPoint) {
+					curP->UpdateWin('-');
 				}
-			// fprintf(f, "\t\t%c", curP->winCount);
-			f << "\t\t" << curP->winCount;
-			curP = curP->next;
+			}
+			f << "\t\t" << curP->GetWin();
+			curP = curP->GetNext();
 		}
 	}
-	f << "\n";
+	// When DEALER won ?
+	f << "\t\t" << dealer->GetWin() << '\n';
 	f.close();
-	// fprintf(f, "\n");
-	// fclose(f);
 
+	// Announce winners
 	curP = firP;
 	std::cout << "------------\n";
 	std::cout << "The following people won:\n\n";
-	while (curP->next) {
-		if(curP->winCount == 'O')
-			std::cout << curP->name
-					  << "\nHand: " << curP->hand
-					  << "\nPoint: " << curP->point << "\n";
-		curP = curP->next;
+	while (curP) {
+		if (curP->GetWin() == 'O') {
+			curP->PrintPlayer();
+		}
+		curP = curP->GetNext();
 	}
-
+	// Tied
 	curP = firP;
 	std::cout << "------------\n";
 	std::cout << "The following people tied:\n\n";
-	while (curP->next) {
-		if (curP->winCount == '-')
-			std::cout << curP->name
-					  << "\nHand: " << curP->hand
-					  << "\nPoint: " << curP->point << "\n";
-		curP = curP->next;
+	while (curP) {
+		if (curP->GetWin() == '-') {
+			curP->PrintPlayer();
+		}
+		curP = curP->GetNext();
 	}
 
-	std::cout << "\n\n"
-			  << "Do you want to keep playing?"
-			  << "\n[1] Yes\n[2] No\n";
-	std::cin >> pick;
-	system("clear");
+	// Continue?
+	//do {
+		std::cout << "\n\n"
+				  << "Do you want to keep playing?"
+				  << "\n[1] Yes\n[2] No\n";
+		std::cin >> pick;
+	//} while (pick != 1 && pick != 2);
+	std::cout << "Option [" << pick << "] has been chosen.\n";
+	system("sleep 1 && clear");
 }
-*/
-

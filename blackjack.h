@@ -47,18 +47,20 @@ private:
 		void EmptyLink(Players* head);
 
 		// Methods
-		// Edit
+		// Setters
 		void SetName(const std::string& name);
 		void UpdateHand(const std::string& card);
 		void UpdatePoint(const int& value);
 		void UpdateWin(const char& c);
 		void UpdateNext(Players* next);
-		// Print
+		// Getters
 		virtual Players* GetThis();
 		std::string GetName();
 		std::string GetHand();
 		int GetPoint();
 		Players* GetNext();
+		char GetWin();
+		// Print
 		virtual void PrintPlayer();
 		void AllPlayer();
 	};

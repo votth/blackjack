@@ -5,5 +5,10 @@
 Explication: O means win, X means lost, - means tied
 
 
-Round		John		Kim		Leo		Kati
+Game		John		Kim		Leo		Kati
 
+  1		X		X		X		X		-
+  2		X		X		X		O		-
+  3		X		X		X		O		-
+  4		-		X		O		X		-
+  5		O		X		O		X		-

@@ -61,6 +61,9 @@ int Blackjack::Players::GetPoint() {
 Blackjack::Players* Blackjack::Players::GetNext() {
 	return this->next;
 }
+char Blackjack::Players::GetWin() {
+	return this->winCount;
+}
 
 // Print
 void Blackjack::Players::PrintPlayer() {
@@ -83,7 +86,6 @@ void Blackjack::Dealer::PrintPlayer() {
 			  << "||\tHand:  " << this->hand
 			  << "\n||\tPoint: " << this->point << "\n\n";
 }
-
 // Flip 2nd card to (unknown)
 void Blackjack::Dealer::HideHand() {
 	const std::string delimeter = " ";
