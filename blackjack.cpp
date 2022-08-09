@@ -79,11 +79,7 @@ void Blackjack::Menu() {
 				  << "-----   Blackjack  Simulator  1.2  -----\n"
 				  << "----------------------------------------\n"
 				  << "Please choose from the below functions:\n";
-		//if 1st start out or have reset (chosen New) then don't print out option [0]
-		if (GameCounter != 0)
-			std::cout << "\t[0]\tContinue\n\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
-		else
-			std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
+		std::cout << "\t[1]\tNew\n\t[2]\tRecord\n\t[3]\tRules\n\t[4]\tExit\n";
 		std::cin >> pick;
 		switch (pick) {
 			case '0': {
@@ -122,7 +118,6 @@ void Blackjack::Menu() {
 			default: {
 				std::cout << "Error! Please try again!\n";
 				WaitKey();
-				system("clear");
 				break;
 			}
 		}
@@ -168,6 +163,7 @@ void Blackjack::RoundStart() {
 			newP->UpdateWin('O');
 			BJack = true;
 		}
+
 		// Add node to chain
 		if (firP) {
 			curP->UpdateNext(newP);
@@ -209,17 +205,18 @@ void Blackjack::PlayerTurn() {
 
 	// Move through players
 	while (curP) {
-		system("clear");
 		curName = curP->GetName();
-		std::cout << "----  Players' turn  ----\n\n";
-		dealer->PrintPlayer();
-
 		// Draw decision, looping for multiple cards
 		do {
+			system("clear");
+			std::cout << "----  Players' turn  ----\n\n";
+			dealer->PrintPlayer();
+			std::cout << '\n';
 			curP->PrintPlayer();
 			std::cout << curName << ", what is your choice?\n"
 					  << "\t[1] Stand\t\t[2] Hit\n";
 			std::cin >> draw;
+			// Error: fail when input a string
 			// Input checker
 			while (draw != 1 && draw != 2) {
 				std::cout << "Please pick again:\n"
@@ -229,20 +226,28 @@ void Blackjack::PlayerTurn() {
 
 			// Outcomes
 			if (draw == 1) {
-				std::cout << curName << " chose to Stand!\n\n"
-						  << "---- Final hand ----\n";
+				std::cout << curName << " chose to Stand!\n\n";
+				system("sleep 0.8 && clear");
+				std::cout << "----  Players' turn  ----\n\n";
+				dealer->PrintPlayer();
+				std::cout << "---- Final hand ----\n";
 				curP->PrintPlayer();
 			} else {
 				std::cout << curName << " chose to Hit...\n\n";
-				system("sleep 0.5");
+				system("sleep 0.5 && clear");
 				DealCard(curP);
 				if (curP->GetPoint() > 21) {
-					std::cout << "Busted!!!\n";
+					std::cout << "----  Players' turn  ----\n\n";
+					dealer->PrintPlayer();
+					std::cout << "---- Eliminated! ----\n";
 					curP->PrintPlayer();
-					std::cout << "---- Eliminated! ----\n\n";
 					draw = 1;
 				} else {
-					std::cout << curName << "'s new hand:\n";
+					system("clear");
+					std::cout << "----  Players' turn  ----\n\n";
+					dealer->PrintPlayer();
+					std::cout << "----  New hand ----\n";
+					curP->PrintPlayer();
 				}
 			}
 		} while(draw != 1);
@@ -264,44 +269,51 @@ void Blackjack::PlayerTurn() {
 	dealer->EmptyLink(dealer);
 
 	// Jump to Result(); ?
-
 }
 
 // DEALER's turn
 void Blackjack::DealerTurn() {
 	system("clear");
-	// Reveal hand
+	// reveal hand slowly by flipping (unknown) to true value??
 	std::cout << "---- DEALER's turn ----\n\n";
 	std::cout << "Hand reveal...\n";
-
-	// Placeholder for revealing hand algo
-
-	// WIP
 	dealer->PrintPlayer();
-	system("sleep 2");
+	system("sleep 1");
+	system("clear");
+	// Hand reveal func
+	dealer->RevealHand();
+	std::cout << "---- DEALER's turn ----\n\n";
+	std::cout << "Hand reveal...\n";
+	dealer->PrintPlayer();
+	system("sleep 0.5");
+	system("clear");
 
 	// Deal more card
-	do {
-		system("clear");
+	if (dealer->GetPoint() < 17) {
 		std::cout << "---- DEALER's turn ----\n\n";
 		std::cout << "Drawing more cards...\n";
-
-		DealCard(dealer);
 		dealer->PrintPlayer();
-		system("sleep 1.2");
+		system("sleep 1");
+		while (dealer->GetPoint() < 17) {
+			system("clear");
+			std::cout << "---- DEALER's turn ----\n\n";
+			std::cout << "Drawing more cards...\n";
+			DealCard(dealer);
+			dealer->PrintPlayer();
+			system("sleep 1.2");
+		}
+	}
 
-	} while (dealer->GetPoint() < 17);
-
-	// Final hand
+	// End
 	system("clear");
-	std::cout << "---- Players' final hand ----\n\n";
+	std::cout << "---- DEALER's turn ----\n\n";
+	std::cout << "DEALER's final hand:\n";
 	dealer->PrintPlayer();
 	firP->AllPlayer();
 
 	std::cout << "[Enter] Announcing result... ";
 	std::cout << "\n\t WIP \n\n";
-	std::getchar();
-	system("clear");
+	WaitKey();
 }
 
 /*
@@ -378,7 +390,6 @@ void Blackjack::Result() {
 			  << "\n[1] Yes\n[2] No\n";
 	std::cin >> pick;
 	system("clear");
-
 }
 */
 
