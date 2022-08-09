@@ -54,7 +54,9 @@ private:
 		void UpdateWin(const char& c);
 		void UpdateNext(Players* next);
 		// Print
+		virtual Players* GetThis();
 		std::string GetName();
+		std::string GetHand();
 		int GetPoint();
 		Players* GetNext();
 		virtual void PrintPlayer();
@@ -67,6 +69,7 @@ private:
 	public:
 		void PrintPlayer();
 		void HideHand();
+		void RevealHand();
 	};
 
 public:

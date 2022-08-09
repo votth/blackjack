@@ -46,8 +46,14 @@ void Blackjack::Players::UpdateNext(Players* next) {
 }
 
 // Getters
+Blackjack::Players* Blackjack::Players::GetThis() {
+	return this;
+}
 std::string Blackjack::Players::GetName() {
 	return this->name;
+}
+std::string Blackjack::Players::GetHand() {
+	return this->hand;
 }
 int Blackjack::Players::GetPoint() {
 	return this->point;
@@ -80,6 +86,7 @@ void Blackjack::Dealer::HideHand() {
 	int start = this->hand.find(delimeter) + 1;
 	int end = this->hand.find(delimeter, start);
 	// extract word
+	// avoid using this->hiddenCard in the loop below
 	std::string extracted = this->hand.substr(start, end - start);
 	this->hiddenCard = extracted;
 	// replace word
@@ -95,4 +102,15 @@ void Blackjack::Dealer::HideHand() {
 		}
 	}
 }
+// Reveal 2nd card
+void Blackjack::Dealer::RevealHand() {
+	// Get start of "(unknown)"
+	int pos = this->hand.find(" ") + 1;
 
+	// replace "(unknown)" with &hiddenCard
+	this->hand.erase(pos, std::strlen("(unkown)") + 1);
+	this->hand.insert(pos, this->hiddenCard);
+
+	// restore dealer->point with &hiddenPoint
+	this->point += this->hiddenPoint;
+}
