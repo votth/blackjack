@@ -1,5 +1,3 @@
 #!/bin/bash
 
-$SOURCES='*.cpp'
-
-g++ $SOURCES -o ./out/run.out && ./out/run.out
+g++ blackjack.cpp players.cpp main.cpp -o out/run.out && ./out/run.out
