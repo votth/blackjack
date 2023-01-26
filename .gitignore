@@ -1,3 +1,6 @@
+*.bak
+logs/record.txt
+
 # Prerequisites
 *.d
 
